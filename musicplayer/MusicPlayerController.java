@@ -152,7 +152,11 @@ public class MusicPlayerController implements Initializable {
         System.out.println(duration + " " + mediaPlayer.getCurrentTime().toSeconds() + " " + slider.getValue() + " " + mediaPlayer.getVolume());
 
     }
-
+    
+    /**
+     *When play button is pressed for a new song, file is loaded into media player
+     *The counter is updated to display the new play length
+     */
     private void play() {
         sound = musicList.getSelectionModel().getSelectedItems().get(0);
         hit = new Media(new File("C:/Sound/" + sound).toURI().toString());
@@ -196,13 +200,13 @@ public class MusicPlayerController implements Initializable {
 
         executorService = Executors.newSingleThreadScheduledExecutor();
 
-        executorService.scheduleAtFixedRate(new Runnable() {
+        executorService.scheduleAtFixedRate(new Runnable() { //Updates the progress bar and the indicator showing remaining time every quarter second
             @Override
             public void run() {
                 if (!sliderMoving) {
                     progressBar();
                 }
-                updateMusicBank();
+                updateMusicBank(); //This checks the location of the folder where music is stored for new files, and adds them to playable list
                 Platform.runLater(new Runnable() {
                     @Override
                     public void run() {
@@ -216,6 +220,10 @@ public class MusicPlayerController implements Initializable {
         title.setText(sound);
     }
 
+    /**
+     *Determines if the file is of type mp3 
+     * Will be expanded to include other audio file types
+     */
     private boolean isMP3(String file) {
         String fileType = "";
         fileType += file.charAt(file.length() - 4);
@@ -229,7 +237,11 @@ public class MusicPlayerController implements Initializable {
 
         return false;
     }
-
+    
+    /**
+     *Updates the counter showing current progress of play time and remaining time
+     *
+     */
     private void time() {
         currentMinutes = mediaPlayer.getCurrentTime().toSeconds() / 60;
         currentSeconds = mediaPlayer.getCurrentTime().toSeconds() - Math.floor(currentMinutes) * 60;
@@ -246,7 +258,7 @@ public class MusicPlayerController implements Initializable {
     }
 
     @FXML
-    private void volumeAction(ActionEvent event) {
+    private void volumeAction(ActionEvent event) {//Controls the volume when buttons pressed on GUI
         if (event.getSource().equals(plusVolume)) {
             if (mediaPlayer.getVolume() >= 1.0) {
                 mediaPlayer.setVolume(volume = 1.0);
